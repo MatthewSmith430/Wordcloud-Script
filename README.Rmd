@@ -1,6 +1,6 @@
 ---
 title: "Wordcloud-Script"
-output: html_document
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
@@ -13,7 +13,7 @@ R script to create wordcloud from text document, using the `wordcloud2` package.
 Here is an example of how to create a wordcloud. I use my PhD thesis as the example text. My PhD thesis can be found at:
 <https://www.researchgate.net/publication/319876899_Corporate_networks_of_international_investment_and_trade>
 
-First, Iload the relevant libraries:
+First, load the relevant libraries:
 ```{r LIB,eval=FALSE}
 library(tm)
 library(magrittr)
@@ -108,7 +108,13 @@ v <- sort(rowSums(dtm),decreasing=TRUE)
 d <- data.frame(word = names(v),freq=v)
 library(wordcloud2)
 
-wordcloud2(d)
+PLOTcloud<-wordcloud2(d)
+library(htmlwidgets)
+library(webshot)
+
+saveWidget(PLOTcloud,"wordcloud_example.html",selfcontained = F)
+webshot(url = "wordcloud_example.html", file = "wordcloud_example.png",delay=30) 
+         
 ```
   
 
@@ -153,5 +159,36 @@ v <- sort(rowSums(dtm),decreasing=TRUE)
 d <- data.frame(word = names(v),freq=v)
 library(wordcloud2)
 
-letterCloud(d, word = "EXAMPLE", color='random-light' , backgroundColor="black")
+PLOTletter<-letterCloud(d, word = "EXAMPLE", color='random-light' , backgroundColor="black")
+library(htmlwidgets)
+library(webshot)
+saveWidget(PLOTletter,"letter_example.html",selfcontained = F)
+webshot(url = "letter_example.html", file = "letter_example.png",delay=120)
 ```
+  
+## Writing Plots to files  
+These plots output to html, where you can then save as an image in your web browser. Otherwise, you can save these as images directly in R, using `htmlwidget` and `webshot` packages.
+
+```{r SAVE_image,eval=FALSE}
+#install webshot
+library(webshot)
+webshot::install_phantomjs()
+
+## Make the wordcloud
+CLOUD<-wordcloud2(d)
+
+## save it in html
+library("htmlwidgets")
+saveWidget(CLOUD,"CLOUD.html",selfcontained = F)
+
+## Save as image (png, jpeg or pdf)
+###It is important to specify a delay - as this gives time for the wordcloud to load fully in html
+
+webshot("CLOUD.html","CLOUD_1.png", delay =15)
+
+webshot("CLOUD.html","CLOUD_1.pdf", delay =15)
+
+
+```
+
+
