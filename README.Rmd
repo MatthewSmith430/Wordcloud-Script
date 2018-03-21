@@ -36,7 +36,6 @@ I then clean the document, removing whitespace, common words and numbers. I conv
 DOCtxt_data<-tm_map(DOCtxt,stripWhitespace)%>%tm_map(.,tolower)%>%
   tm_map(.,removeNumbers)%>%tm_map(.,removePunctuation)%>%
   tm_map(.,removeWords,stopwords("english"))%>%
-  tm_map(.,removeWords,"course")
   tm_map(.,removeWords,c("and","the","our","that","table","figure",
                          "for","are","also","more","has",
                          "must","have","should","this",
