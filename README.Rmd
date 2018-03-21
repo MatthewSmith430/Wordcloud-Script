@@ -1,0 +1,157 @@
+---
+title: "Wordcloud-Script"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+R script to create wordcloud from text document, using the `wordcloud2` package. 
+
+## Example
+Here is an example of how to create a wordcloud. I use my PhD thesis as the example text. My PhD thesis can be found at:
+<https://www.researchgate.net/publication/319876899_Corporate_networks_of_international_investment_and_trade>
+
+First, Iload the relevant libraries:
+```{r LIB,eval=FALSE}
+library(tm)
+library(magrittr)
+#library(devtools)
+#devtools::install_github("lchiffon/wordcloud2")
+library(wordcloud2)
+```
+
+Then I save the document as a .txt file and then read into R:
+
+```{r Read,eval=FALSE}
+text1<-"C:\\Users\\example.txt"
+text2 <-readLines(text1)
+DOCtxt<-Corpus(VectorSource(text2))
+```
+
+I then clean the document, removing whitespace, common words and numbers. I convert all words to lowercase. And finally, I remove a list of words - these are common words for this particular document:
+
+```{r remove,eval=FALSE}
+DOCtxt_data<-tm_map(DOCtxt,stripWhitespace)%>%tm_map(.,tolower)%>%
+  tm_map(.,removeNumbers)%>%tm_map(.,removePunctuation)%>%
+  tm_map(.,removeWords,stopwords("english"))%>%
+  tm_map(.,removeWords,"course")
+  tm_map(.,removeWords,c("and","the","our","that","table","figure",
+                         "for","are","also","more","has",
+                         "must","have","should","this",
+                         "with","furthermore","PhD",
+                         "additionally","in","number",
+                         "which","patterns","use","one",
+                         "approach","whether","capture",
+                         "effects","specifically",
+                         "instance","yet","two",
+                         "rather","approaches","along",
+                         "however","extent","provides",
+                         "applied","characterised",
+                         "amongst","need","often","order",
+                         "table","based","key","examining",
+                         "captures","important","positive","using",
+                         "negative","better","perspective","journal",
+                         "case","therefore","can","work","et","al",
+                         "used","role","set","studies","measures",
+                         "paper","provide","figures","tables"))
+```
+
+From this - we create an object providing words and frequency:
+```{r DTM,eval=FALSE}
+dtm<- TermDocumentMatrix(DOCtxt_data)%>%as.matrix()
+v <- sort(rowSums(dtm),decreasing=TRUE)
+d <- data.frame(word = names(v),freq=v)
+```
+
+## Wordcloud Plot
+Now I have the clean object, I can create the plots. 
+
+### Wordcloud plot:
+```{r WC_command,eval=FALSE}
+wordcloud2(d)
+```
+  
+```{r WC, echo=FALSE}
+library(NLP)
+library(tm)
+library(magrittr)
+speech <-"C:\\Users\\matt_\\Documents\\Wordcloud\\CORPORATE NETWORKS OF INTERNATIONAL_WORDCLOUD.txt"
+THESIStxt <-readLines(speech)
+THESIS<-Corpus(VectorSource(THESIStxt))
+THESIS_data2<-tm_map(THESIS,stripWhitespace)%>%tm_map(.,tolower)%>%
+  tm_map(.,removeNumbers)%>%tm_map(.,removePunctuation)%>%
+  tm_map(.,removeWords,stopwords("english"))%>%
+  tm_map(.,removeWords,c("and","the","our","that","table","figure",
+                         "for","are","also","more","has",
+                         "must","have","should","this",
+                         "with","furthermore","PhD",
+                         "additionally","in","number",
+                         "which","patterns","use","one",
+                         "approach","whether","capture",
+                         "effects","specifically",
+                         "instance","yet","two",
+                         "rather","approaches","along",
+                         "however","extent","provides",
+                         "applied","characterised",
+                         "amongst","need","often","order",
+                         "table","based","key","examining",
+                         "captures","important","positive","using",
+                         "negative","better","perspective","journal",
+                         "case","therefore","can","work","et","al",
+                         "used","role","set","studies","measures",
+                         "paper","provide","figures","tables"))
+
+dtm<- TermDocumentMatrix(THESIS_data2)%>%as.matrix()
+v <- sort(rowSums(dtm),decreasing=TRUE)
+d <- data.frame(word = names(v),freq=v)
+library(wordcloud2)
+
+wordcloud2(d)
+```
+  
+
+### Letterplot:
+```{r LC_command,eval=FALSE}
+letterCloud(d, word = "EXAMPLE", color='random-light' , backgroundColor="black")
+```
+  
+  
+```{r WL, echo=FALSE}
+library(NLP)
+library(tm)
+library(magrittr)
+speech <-"C:\\Users\\matt_\\Documents\\Wordcloud\\CORPORATE NETWORKS OF INTERNATIONAL_WORDCLOUD.txt"
+THESIStxt <-readLines(speech)
+THESIS<-Corpus(VectorSource(THESIStxt))
+THESIS_data2<-tm_map(THESIS,stripWhitespace)%>%tm_map(.,tolower)%>%
+  tm_map(.,removeNumbers)%>%tm_map(.,removePunctuation)%>%
+  tm_map(.,removeWords,stopwords("english"))%>%
+  tm_map(.,removeWords,c("and","the","our","that","table","figure",
+                         "for","are","also","more","has",
+                         "must","have","should","this",
+                         "with","furthermore","PhD",
+                         "additionally","in","number",
+                         "which","patterns","use","one",
+                         "approach","whether","capture",
+                         "effects","specifically",
+                         "instance","yet","two",
+                         "rather","approaches","along",
+                         "however","extent","provides",
+                         "applied","characterised",
+                         "amongst","need","often","order",
+                         "table","based","key","examining",
+                         "captures","important","positive","using",
+                         "negative","better","perspective","journal",
+                         "case","therefore","can","work","et","al",
+                         "used","role","set","studies","measures",
+                         "paper","provide","figures","tables"))
+
+dtm<- TermDocumentMatrix(THESIS_data2)%>%as.matrix()
+v <- sort(rowSums(dtm),decreasing=TRUE)
+d <- data.frame(word = names(v),freq=v)
+library(wordcloud2)
+
+letterCloud(d, word = "EXAMPLE", color='random-light' , backgroundColor="black")
+```
