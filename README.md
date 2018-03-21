@@ -73,9 +73,6 @@ Now I have the clean object, I can create the plots.
 wordcloud2(d)
 ```
 
-    ## Warning: package 'htmlwidgets' was built under R version 3.4.4
-
-    ## Warning: package 'webshot' was built under R version 3.4.4
 
 ![](README_files/figure-markdown_github/WC-1.png)
 
